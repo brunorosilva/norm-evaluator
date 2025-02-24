@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "norm-benchmark"
+version = "0.11.0"
+description = "coNstructiOn pRoject Manager"
+authors = ["Bruno Chicelli <b.rosilva1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+scikit-learn = "^1.6.1"
+transformers = "^4.49.0"
+sentence-transformers = "^3.4.1"
+fire = "^0.7.0"
+streamlit = "^1.42.2"
+langchain-ollama = "^0.2.3"
+langchain-community = "^0.3.18"
+boto3 = "^1.36.26"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.0"
+flake8 = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+norm-benchmark = "norm_benchmark.norm_cli:run"
