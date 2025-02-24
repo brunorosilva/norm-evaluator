@@ -16,6 +16,14 @@ class Evaluator:
         model_outputs_path="examples/model_outputs/2.json",
         ground_truths_path="examples/ground_truth",
     ):
+        """
+        Initialize Evaluator with model outputs and ground truth data.
+
+        Args:
+            model_name: str, name of the model.
+            model_outputs_path: str, path to the model outputs json file.
+            ground_truths_path: str, path to the ground truths directory.
+        """
         self.model_name = model_name
         self.model_outputs = load_json_file(model_outputs_path)
         self.ground_truths = load_ground_truths(ground_truths_path)
@@ -29,6 +37,13 @@ class Evaluator:
         self.QA_encoder = SentenceTransformer(QA_SBERT_MODEL_NAME, device="cpu")
 
     def compute_totals(self):
+        """
+        Compute the total cost of all rows for each file in the model outputs and ground truths.
+
+        Returns:
+            A tuple of two lists. The first list contains the total costs of all rows for each file in the ground truths, and
+            the second list contains the total costs of all rows for each file in the model outputs.
+        """
         expert_estimates = []
         model_estimates = []
         for ground_truth in sorted(self.ground_truths):
@@ -48,6 +63,13 @@ class Evaluator:
         return expert_estimates, model_estimates
 
     def compute_per_section_totals(self):
+        """
+        Compute the total cost of each section for each file in the model outputs and ground truths.
+
+        Returns:
+            A tuple of two lists. The first list contains the total costs of each section for each file in the model outputs, and
+            the second list contains the total costs of each section for each file in the ground truths.
+        """
         model_section_estimates = []
         expert_section_estimates = []
         for ground_truth in sorted(self.ground_truths):
@@ -83,6 +105,12 @@ class Evaluator:
         return model_section_estimates, expert_section_estimates
 
     def get_labor_activities(self):
+        """
+        Get all labor activities from the model outputs.
+
+        Returns:
+            A list of lists. Each sublist contains all labor activities in a file, represented as dictionaries with keys "activity" and "sectionName".
+        """
         labor_activites = []
         preds = self.model_outputs["estimate_preds"]
         for pred in preds:
@@ -96,6 +124,12 @@ class Evaluator:
         return labor_activites
 
     def get_material_products(self):
+        """
+        Get all material products from the model outputs.
+
+        Returns:
+            A list of lists. Each sublist contains all material products in a file, represented as dictionaries with keys "product" and "sectionName".
+        """
         material_products = []
         preds = self.model_outputs["estimate_preds"]
         for pred in preds:
@@ -109,6 +143,14 @@ class Evaluator:
         return material_products
 
     def run_benchmark(self):
+        """
+        Runs the benchmark and returns the scores.
+
+        The scores are in the order of (section_f1_score, section_mape_score, total_cost_score, material_grouping_score, labor_grouping_score).
+
+        Returns:
+            A tuple of five floats. The first is the F1 score for section matching, the second is the mean absolute percentage error for section cost estimates, the third is the accuracy of total cost estimates, the fourth is the accuracy of material product grouping, and the fifth is the accuracy of labor activity grouping.
+        """
         section_score = SectionScore()
         cost_score = TotalCostScore()
         grouping_score = GroupingScore()
@@ -146,6 +188,22 @@ class Evaluator:
         )
 
     def write_results_to_json(self, benchmark_results):
+        """
+        Writes the results of the benchmark to a JSON file.
+
+        The results are written in the following format:
+        {
+            "model_name": str,
+            "total_score": float,
+            "section_f1_score": float,
+            "section_mape_score": float,
+            "total_cost_score": float,
+            "material_grouping_score": float,
+            "labor_grouping_score": float,
+        }
+
+        The total score is a weighted average of the section F1 score, section MAPE score, total cost score, material grouping score, and labor grouping score. The weights are 0.2, 0.3, 0.3, 0.1, and 0.1, respectively.
+        """
         (
             section_f1_score,
             section_mape_score,
@@ -174,6 +232,11 @@ class Evaluator:
             )
 
     def to_leaderboard(self):
+        """
+        Uploads the results JSON file to the NORM_BUCKET S3 bucket.
+
+        This should be called after calling write_results_to_json.
+        """
         s3 = boto3.Session().client("s3")
         s3.upload_file(
             f"results/{self.model_name}.json", NORM_BUCKET, f"{self.model_name}.json"

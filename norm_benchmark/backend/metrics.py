@@ -32,6 +32,18 @@ class TotalCostScore(Metric):
         ELASTICITY=ELASTICITY,
         CONFIDENCE_INTERVAL=CONFIDENCE_INTERVAL,
     ):
+        """
+        Calculate total cost score for model given expert estimate.
+
+        If model is within confidence interval around expert estimate, return absolute difference between the two divided by expert estimate.
+        Otherwise, return 0.
+
+        :param expert_estimate: float, expert estimate
+        :param model_estimate: float, model estimate
+        :param ELASTICITY: float, standard deviation of normal distribution
+        :param CONFIDENCE_INTERVAL: float, confidence interval for normal distribution
+        :return: float, total cost score
+        """
         if self.is_model_within_distribuition(
             model_estimate, expert_estimate, CONFIDENCE_INTERVAL, ELASTICITY
         ):
@@ -45,6 +57,15 @@ class TotalCostScore(Metric):
     def is_model_within_distribuition(
         estimate, expert_estimate, CONFIDENCE_INTERVAL, ELASTICITY
     ):
+        """
+        Check if model estimate is within confidence interval around expert estimate.
+
+        :param estimate: float, model estimate
+        :param expert_estimate: float, expert estimate
+        :param CONFIDENCE_INTERVAL: float, confidence interval for normal distribution
+        :param ELASTICITY: float, standard deviation of normal distribution
+        :return: bool, is model estimate within distribution
+        """
         lower, upper = scipy.stats.norm.interval(
             CONFIDENCE_INTERVAL, expert_estimate, expert_estimate * ELASTICITY
         )
@@ -53,8 +74,14 @@ class TotalCostScore(Metric):
 
 class SectionScore(Metric):
     def __call__(self, encoder, expert_sections: list, model_sections: list):
-        # expert_dict = {section: estimate for section, estimate in expert_sections}
-        # model_dict = {section: estimate for section, estimate in model_sections}
+        """
+        Compute the section score.
+
+        :param encoder: SentenceTransformer, transformer for computing similarity
+        :param expert_sections: dict, expert sections with their estimates
+        :param model_sections: dict, model sections with their estimates
+        :return: tuple, (f1 score, mean absolute percentage error)
+        """
         expert_dict = expert_sections
         model_dict = model_sections
         all_sections = list(set(expert_dict.keys()) | set(model_dict.keys()))
@@ -103,6 +130,15 @@ class SectionScore(Metric):
 
     @staticmethod
     def is_similar(encoder, s1, s2, threshold=0.7):
+        """
+        Determine if two sections are similar based on cosine similarity.
+
+        :param encoder: SentenceTransformer, transformer for encoding text into embeddings
+        :param s1: str, first section name
+        :param s2: str, second section name
+        :param threshold: float, similarity threshold for considering two sections as similar
+        :return: bool, True if sections are similar, False otherwise
+        """
         if s1 == s2:
             return True
 
@@ -111,6 +147,19 @@ class SectionScore(Metric):
 
 class GroupingScore(Metric):
     def __call__(self, encoder, material_data, labor_data, threshold=0.3):
+
+        """
+        Calculate the grouping scores for material and labor data based on cosine similarity.
+
+        Args:
+            encoder: SentenceTransformer, encoder used to transform text into embeddings.
+            material_data: list of lists, material data containing dictionaries with keys "product" and "sectionName".
+            labor_data: list of lists, labor data containing dictionaries with keys "activity" and "sectionName".
+            threshold: float, similarity threshold for determining a match.
+
+        Returns:
+            A tuple of two floats: the first is the score for material grouping, and the second is the score for labor grouping.
+        """
 
         material_output = []
         for preds in tqdm(material_data):
