@@ -7,14 +7,14 @@ from sentence_transformers import SentenceTransformer
 from norm_benchmark.backend.metrics import GroupingScore, SectionScore, TotalCostScore
 from norm_benchmark.backend.utils import load_ground_truths, load_json_file
 from norm_benchmark.constants import NORM_BUCKET, QA_SBERT_MODEL_NAME, SBERT_MODEL_NAME
-
+from typing import Tuple
 
 class Evaluator:
     def __init__(
         self,
-        model_name,
-        model_outputs_path="examples/model_outputs/2.json",
-        ground_truths_path="examples/ground_truth",
+        model_name: str,
+        model_outputs_path: str ="examples/model_outputs/2.json",
+        ground_truths_path: str ="examples/ground_truth",
     ):
         """
         Initialize Evaluator with model outputs and ground truth data.
@@ -36,7 +36,7 @@ class Evaluator:
         self.encoder = SentenceTransformer(SBERT_MODEL_NAME, device="cpu")
         self.QA_encoder = SentenceTransformer(QA_SBERT_MODEL_NAME, device="cpu")
 
-    def compute_totals(self):
+    def compute_totals(self) -> Tuple[list, list]:
         """
         Compute the total cost of all rows for each file in the model outputs and ground truths.
 
@@ -62,7 +62,7 @@ class Evaluator:
 
         return expert_estimates, model_estimates
 
-    def compute_per_section_totals(self):
+    def compute_per_section_totals(self) -> Tuple[list, list]:
         """
         Compute the total cost of each section for each file in the model outputs and ground truths.
 
@@ -104,7 +104,7 @@ class Evaluator:
                 )
         return model_section_estimates, expert_section_estimates
 
-    def get_labor_activities(self):
+    def get_labor_activities(self) -> list:
         """
         Get all labor activities from the model outputs.
 
@@ -123,7 +123,7 @@ class Evaluator:
             )
         return labor_activites
 
-    def get_material_products(self):
+    def get_material_products(self) -> list:
         """
         Get all material products from the model outputs.
 
@@ -142,7 +142,7 @@ class Evaluator:
             )
         return material_products
 
-    def run_benchmark(self):
+    def run_benchmark(self) -> Tuple[float, float, float, float, float]:
         """
         Runs the benchmark and returns the scores.
 
@@ -187,7 +187,7 @@ class Evaluator:
             labor_grouping_score,
         )
 
-    def write_results_to_json(self, benchmark_results):
+    def write_results_to_json(self, benchmark_results: Tuple) -> None:
         """
         Writes the results of the benchmark to a JSON file.
 
@@ -231,7 +231,7 @@ class Evaluator:
                 f,
             )
 
-    def to_leaderboard(self):
+    def to_leaderboard(self) -> None:
         """
         Uploads the results JSON file to the NORM_BUCKET S3 bucket.
 

@@ -73,7 +73,7 @@ class TotalCostScore(Metric):
 
 
 class SectionScore(Metric):
-    def __call__(self, encoder, expert_sections: list, model_sections: list):
+    def __call__(self, encoder, expert_sections: dict, model_sections: dict):
         """
         Compute the section score.
 
