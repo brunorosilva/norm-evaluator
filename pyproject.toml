@@ -12,8 +12,6 @@ transformers = "^4.49.0"
 sentence-transformers = "^3.4.1"
 fire = "^0.7.0"
 streamlit = "^1.42.2"
-langchain-ollama = "^0.2.3"
-langchain-community = "^0.3.18"
 boto3 = "^1.36.26"
 
 
