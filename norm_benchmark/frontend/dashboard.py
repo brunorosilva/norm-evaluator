@@ -71,5 +71,6 @@ def create_dashboard():
             y="total_score",
         )
 
+
 if __name__ == "__main__":
     create_dashboard()

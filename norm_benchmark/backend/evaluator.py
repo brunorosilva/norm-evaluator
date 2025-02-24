@@ -1,20 +1,23 @@
 import json
+from typing import Tuple
 
 import boto3
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from norm_benchmark.backend.metrics import GroupingScore, SectionScore, TotalCostScore
+from norm_benchmark.backend.metrics import (GroupingScore, SectionScore,
+                                            TotalCostScore)
 from norm_benchmark.backend.utils import load_ground_truths, load_json_file
-from norm_benchmark.constants import NORM_BUCKET, QA_SBERT_MODEL_NAME, SBERT_MODEL_NAME
-from typing import Tuple
+from norm_benchmark.constants import (NORM_BUCKET, QA_SBERT_MODEL_NAME,
+                                      SBERT_MODEL_NAME)
+
 
 class Evaluator:
     def __init__(
         self,
         model_name: str,
-        model_outputs_path: str ="examples/model_outputs/2.json",
-        ground_truths_path: str ="examples/ground_truth",
+        model_outputs_path: str = "examples/model_outputs/2.json",
+        ground_truths_path: str = "examples/ground_truth",
     ):
         """
         Initialize Evaluator with model outputs and ground truth data.

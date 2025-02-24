@@ -1,7 +1,9 @@
-import fire
-import subprocess
-from norm_benchmark.backend.app import main
 import importlib.resources as resources
+import subprocess
+
+import fire
+
+from norm_benchmark.backend.app import main
 
 
 class Norm(object):
@@ -17,21 +19,21 @@ class Norm(object):
         main(model_outputs_path, ground_truths_path, to_leaderboard)
 
     def dashboard(self):
-        
         """
         Start the Streamlit dashboard for visualizing leaderboard results.
 
         The dashboard can be accessed in a web browser at http://localhost:8501.
         """
-        from norm_benchmark.frontend import dashboard  # Import the dashboard script as a module
-        
+        from norm_benchmark.frontend import \
+            dashboard  # Import the dashboard script as a module
+
         with resources.path(dashboard, "dashboard.py") as dashboard_script:
             subprocess.run(["streamlit", "run", str(dashboard_script)])
+
 
 def run():
     fire.Fire(Norm)
 
+
 if __name__ == "__main__":
     run()
-    
-    

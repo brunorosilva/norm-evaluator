@@ -2,15 +2,12 @@ import abc
 
 import numpy as np
 import scipy
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama import ChatOllama
 from sentence_transformers.util import cos_sim
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import f1_score
 from tqdm import tqdm
 
 from norm_benchmark.backend.prompts import (labor_grouping_template,
-                                  product_grouping_template)
+                                            product_grouping_template)
 from norm_benchmark.constants import CONFIDENCE_INTERVAL, ELASTICITY
 
 
@@ -147,7 +144,6 @@ class SectionScore(Metric):
 
 class GroupingScore(Metric):
     def __call__(self, encoder, material_data, labor_data, threshold=0.3):
-
         """
         Calculate the grouping scores for material and labor data based on cosine similarity.
 
