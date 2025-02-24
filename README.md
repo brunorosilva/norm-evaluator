@@ -1,7 +1,5 @@
 # NORM - coNstructiOn pRoject Manager
 
-![Norm Logo](https://via.placeholder.com/150)
-
 **Norm** is a CLI tool for benchmarking cost estimate generator models in construction projects. It evaluates model outputs against ground truths and provides a leaderboard for comparison. The name "Norm" was chosen because it sounds like a good PM name.
 
 ## Report
