@@ -9,6 +9,7 @@ def main(model_outputs_path, ground_truths_path, to_leaderboard=False, s3_bucket
         model_outputs_path (str): The file path to the model's output JSON file.
         ground_truths_path (str): The file path to the ground truths directory.
         to_leaderboard (bool, optional): If True, upload the results to the leaderboard. Defaults to False.
+        s3_bucket (str, optional): The name of the S3 bucket to upload the results to. Defaults to None.
 
     Process:
         - Extracts the model name from the model outputs path.
