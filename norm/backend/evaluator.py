@@ -5,10 +5,10 @@ import boto3
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from norm_benchmark.backend.metrics import (GroupingScore, SectionScore,
+from norm.backend.metrics import (GroupingScore, SectionScore,
                                             TotalCostScore)
-from norm_benchmark.backend.utils import load_ground_truths, load_json_file
-from norm_benchmark.constants import (NORM_BUCKET, QA_SBERT_MODEL_NAME,
+from norm.backend.utils import load_ground_truths, load_json_file
+from norm.constants import (NORM_BUCKET, QA_SBERT_MODEL_NAME,
                                       SBERT_MODEL_NAME)
 
 

@@ -3,10 +3,10 @@ import subprocess
 
 import fire
 
-from norm_benchmark.backend.app import main
+from norm.backend.app import main
 
 
-class Norm(object):
+class NormBechmark(object):
     def benchmark(self, model_outputs_path, ground_truths_path, to_leaderboard=False):
         """
         Run the benchmarking process for a given model's outputs against ground truths.
@@ -24,7 +24,7 @@ class Norm(object):
 
         The dashboard can be accessed in a web browser at http://localhost:8501.
         """
-        from norm_benchmark.frontend import \
+        from norm.frontend import \
             dashboard  # Import the dashboard script as a module
 
         with resources.path(dashboard, "dashboard.py") as dashboard_script:
@@ -32,7 +32,7 @@ class Norm(object):
 
 
 def run():
-    fire.Fire(Norm)
+    fire.Fire(NormBechmark)
 
 
 if __name__ == "__main__":

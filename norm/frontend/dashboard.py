@@ -4,7 +4,7 @@ import boto3
 import pandas as pd
 import streamlit as st
 
-from norm_benchmark.constants import NORM_BUCKET
+from norm.constants import NORM_BUCKET
 
 
 def get_leaderboard():

@@ -1,4 +1,4 @@
-from norm_benchmark.backend.evaluator import Evaluator
+from norm.backend.evaluator import Evaluator
 
 
 def main(model_outputs_path, ground_truths_path, to_leaderboard=False):

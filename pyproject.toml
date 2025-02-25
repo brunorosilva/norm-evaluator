@@ -28,4 +28,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-norm-benchmark = "norm_benchmark.norm_cli:run"
+norm = "norm.norm_cli:run"
