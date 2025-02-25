@@ -4,12 +4,10 @@ import boto3
 import pandas as pd
 import streamlit as st
 
-from norm_benchmark.constants import NORM_BUCKET
 
-
-def get_leaderboard():
+def get_leaderboard(s3_bucket):
     """
-    Downloads all JSON files from the NORM_BUCKET S3 bucket, reads them into
+    Downloads all JSON files from the provided S3 bucket, reads them into
     DataFrames, and returns a concatenated DataFrame of all the DataFrames.
 
     Returns
@@ -22,16 +20,16 @@ def get_leaderboard():
 
     s3 = session.client("s3")
     data = []
-    for obj in s3.list_objects(Bucket=NORM_BUCKET)["Contents"]:
+    for obj in s3.list_objects(Bucket=s3_bucket)["Contents"]:
         if obj["Key"].endswith(".json"):
-            s3.download_file(NORM_BUCKET, obj["Key"], obj["Key"])
+            s3.download_file(s3_bucket, obj["Key"], obj["Key"])
             data.append(pd.read_json(obj["Key"], orient="index").T)
             os.remove(obj["Key"])
 
     return pd.concat(data, ignore_index=True)
 
 
-def create_dashboard():
+def create_dashboard(s3_bucket=None):
     """
     Creates a Streamlit dashboard for the models benchmark.
 
@@ -44,8 +42,7 @@ def create_dashboard():
 
     The dashboard has a button in the sidebar labeled "Create Leaderboard".
     When clicked, the dashboard will download all the JSON files from the
-    NORM_BUCKET S3 bucket, read them into DataFrames, and display the
-    leaderboard.
+    S3 bucket, read them into DataFrames, and display the leaderboard.
 
     Parameters
     ----------
@@ -55,11 +52,12 @@ def create_dashboard():
     -------
     None
     """
+    s3_bucket = os.getenv("NORM_S3_BUCKET", "empty")
     st.set_page_config(page_title="Models Benchmark", layout="wide")
     st.title("Models Benchmark")
     create_leaderboard = st.sidebar.button("Create Leaderboard")
     if create_leaderboard:
-        leaderboard = get_leaderboard()
+        leaderboard = get_leaderboard(s3_bucket)
         st.markdown("## Leaderboard Table")
         st.dataframe(leaderboard.sort_values("total_score", ascending=False))
         st.markdown("## Leaderboard Bar Chart")

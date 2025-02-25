@@ -1,7 +1,7 @@
 from norm_benchmark.backend.evaluator import Evaluator
 
 
-def main(model_outputs_path, ground_truths_path, to_leaderboard=False):
+def main(model_outputs_path, ground_truths_path, to_leaderboard=False, s3_bucket=None):
     """
     Execute the benchmarking process for a given model's outputs against ground truths.
 
@@ -9,6 +9,7 @@ def main(model_outputs_path, ground_truths_path, to_leaderboard=False):
         model_outputs_path (str): The file path to the model's output JSON file.
         ground_truths_path (str): The file path to the ground truths directory.
         to_leaderboard (bool, optional): If True, upload the results to the leaderboard. Defaults to False.
+        s3_bucket (str, optional): The name of the S3 bucket to upload the results to. Defaults to None.
 
     Process:
         - Extracts the model name from the model outputs path.
@@ -25,4 +26,4 @@ def main(model_outputs_path, ground_truths_path, to_leaderboard=False):
     benchmark_results = evaluator.run_benchmark()
     evaluator.write_results_to_json(benchmark_results)
     if to_leaderboard:
-        evaluator.to_leaderboard()
+        evaluator.to_leaderboard(s3_bucket)

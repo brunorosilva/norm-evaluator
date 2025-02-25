@@ -11,4 +11,3 @@ LEADERBOARD_COLUMNS = [
     "material_grouping_score",
     "labor_grouping_score",
 ]
-NORM_BUCKET = "norm-evaluator"

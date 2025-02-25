@@ -27,7 +27,7 @@ Norm provides a simple CLI with two commands: `benchmark` and `dashboard`.
 Compare a model's output against ground truths:
 
 ```sh
-norm benchmark <model_outputs.json> <ground_truths_directory> [--to_leaderboard]
+norm benchmark <model_outputs.json> <ground_truths_directory> [--to_leaderboard] [--s3_bucket s3_bucket]
 ```
 
 #### Arguments:
@@ -40,7 +40,7 @@ norm benchmark <model_outputs.json> <ground_truths_directory> [--to_leaderboard]
 Start the Streamlit dashboard for visualizing benchmarking results:
 
 ```sh
-norm dashboard
+norm dashboard <s3_bucket>
 ```
 
 The dashboard will be available at: [http://localhost:8501](http://localhost:8501)
@@ -48,8 +48,8 @@ The dashboard will be available at: [http://localhost:8501](http://localhost:850
 ## Example
 
 ```sh
-norm benchmark results.json ground_truths/ --to_leaderboard
-norm dashboard
+norm benchmark results.json ground_truths/ --to_leaderboard --s3_bucket s3_bucket
+norm dashboard s3_bucket
 ```
 
 ## License

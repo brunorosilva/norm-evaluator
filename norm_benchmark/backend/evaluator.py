@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Tuple
 
 import boto3
@@ -8,8 +9,7 @@ from sentence_transformers import SentenceTransformer
 from norm_benchmark.backend.metrics import (GroupingScore, SectionScore,
                                             TotalCostScore)
 from norm_benchmark.backend.utils import load_ground_truths, load_json_file
-from norm_benchmark.constants import (NORM_BUCKET, QA_SBERT_MODEL_NAME,
-                                      SBERT_MODEL_NAME)
+from norm_benchmark.constants import QA_SBERT_MODEL_NAME, SBERT_MODEL_NAME
 
 
 class Evaluator:
@@ -214,6 +214,8 @@ class Evaluator:
             material_grouping_score,
             labor_grouping_score,
         ) = benchmark_results
+        if not os.path.exists("results"):
+            os.makedirs("results")
         with open(f"results/{self.model_name}.json", "w") as f:
             json.dump(
                 {
@@ -234,13 +236,13 @@ class Evaluator:
                 f,
             )
 
-    def to_leaderboard(self) -> None:
+    def to_leaderboard(self, s3_bucket) -> None:
         """
-        Uploads the results JSON file to the NORM_BUCKET S3 bucket.
+        Uploads the results JSON file to the provided s3 bucket.
 
         This should be called after calling write_results_to_json.
         """
         s3 = boto3.Session().client("s3")
         s3.upload_file(
-            f"results/{self.model_name}.json", NORM_BUCKET, f"{self.model_name}.json"
+            f"results/{self.model_name}.json", s3_bucket, f"{self.model_name}.json"
         )
