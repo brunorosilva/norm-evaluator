@@ -6,9 +6,9 @@ from sentence_transformers.util import cos_sim
 from sklearn.metrics import f1_score
 from tqdm import tqdm
 
-from norm.backend.prompts import (labor_grouping_template,
+from norm_benchmark.backend.prompts import (labor_grouping_template,
                                             product_grouping_template)
-from norm.constants import CONFIDENCE_INTERVAL, ELASTICITY
+from norm_benchmark.constants import CONFIDENCE_INTERVAL, ELASTICITY
 
 
 class Metric(metaclass=abc.ABCMeta):
